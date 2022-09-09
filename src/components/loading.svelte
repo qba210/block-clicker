@@ -33,6 +33,7 @@
     import { blockUpgrades } from "../ts/upgrades";
     import * as Localization from "../ts/localization";
     import { onMount } from "svelte"
+    import { URL_PREFIX } from "../ts/config";
 
     let blockLeft: string;
     let blockRight: string;
@@ -44,27 +45,27 @@
 
     function getBackgroundUrl() {
         if (targetBlockUpgrade.textureMode === "all") {
-            return `/img/blocks/${targetBlockUpgrade.namespace}/all.${targetBlockUpgrade.imageExtension}`;
+            return `${URL_PREFIX}/img/blocks/${targetBlockUpgrade.namespace}/all.${targetBlockUpgrade.imageExtension}`;
         }
-        return `/img/blocks/${targetBlockUpgrade.namespace}/bottom.${targetBlockUpgrade.imageExtension}`;
+        return `${URL_PREFIX}/img/blocks/${targetBlockUpgrade.namespace}/bottom.${targetBlockUpgrade.imageExtension}`;
     }
 
     
     switch (targetBlockUpgrade.textureMode) {
         case "all":
-            blockLeft = `/img/blocks/${targetBlockUpgrade.namespace}/all.jpg`;
-            blockTop = `/img/blocks/${targetBlockUpgrade.namespace}/all.jpg`;
-            blockRight = `/img/blocks/${targetBlockUpgrade.namespace}/all.jpg`;
-            blockBackRight = `/img/blocks/${targetBlockUpgrade.namespace}/all.jpg`;
-            blockBackLeft = `/img/blocks/${targetBlockUpgrade.namespace}/all.jpg`;
+            blockLeft = `${URL_PREFIX}/img/blocks/${targetBlockUpgrade.namespace}/all.jpg`;
+            blockTop = `${URL_PREFIX}/img/blocks/${targetBlockUpgrade.namespace}/all.jpg`;
+            blockRight = `${URL_PREFIX}/img/blocks/${targetBlockUpgrade.namespace}/all.jpg`;
+            blockBackRight = `${URL_PREFIX}/img/blocks/${targetBlockUpgrade.namespace}/all.jpg`;
+            blockBackLeft = `${URL_PREFIX}/img/blocks/${targetBlockUpgrade.namespace}/all.jpg`;
             break;
 
         case "bottomtop":
-            blockLeft = `/img/blocks/${targetBlockUpgrade.namespace}/bottom.jpg`;
-            blockTop = `/img/blocks/${targetBlockUpgrade.namespace}/top.jpg`;
-            blockRight = `/img/blocks/${targetBlockUpgrade.namespace}/bottom.jpg`;
-            blockBackRight = `/img/blocks/${targetBlockUpgrade.namespace}/bottom.jpg`;
-            blockBackLeft = `/img/blocks/${targetBlockUpgrade.namespace}/bottom.jpg`;
+            blockLeft = `${URL_PREFIX}/img/blocks/${targetBlockUpgrade.namespace}/bottom.jpg`;
+            blockTop = `${URL_PREFIX}/img/blocks/${targetBlockUpgrade.namespace}/top.jpg`;
+            blockRight = `${URL_PREFIX}/img/blocks/${targetBlockUpgrade.namespace}/bottom.jpg`;
+            blockBackRight = `${URL_PREFIX}/img/blocks/${targetBlockUpgrade.namespace}/bottom.jpg`;
+            blockBackLeft = `${URL_PREFIX}/img/blocks/${targetBlockUpgrade.namespace}/bottom.jpg`;
             break;
     }
 </script>

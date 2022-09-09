@@ -2,6 +2,7 @@ import { blockUpgrades, findBlockUpgradeByNamespace, type BlockUpgrade } from ".
 import type ArbitiaryUpgrade from "../upgrades/arbitiaryUpgrade";
 import * as Localization from "../localization"
 import IllegalStateError from "../errors/IllegalStateError";
+import { URL_PREFIX } from "../config";
 
 export interface BlockGetters {
     getBlocks: () => number;
@@ -84,24 +85,24 @@ export class UpgradeManager {
 
         switch (upgrade.textureMode) {
             case "all":
-                this.left.src = `/img/blocks/${upgrade.namespace}/all.jpg`;
-                this.top.src = `/img/blocks/${upgrade.namespace}/all.jpg`;
-                this.right.src = `/img/blocks/${upgrade.namespace}/all.jpg`;
-                this.setFavicon(`/img/blocks/${upgrade.namespace}/all.jpg`);
+                this.left.src = `${URL_PREFIX}/img/blocks/${upgrade.namespace}/all.jpg`;
+                this.top.src = `${URL_PREFIX}/img/blocks/${upgrade.namespace}/all.jpg`;
+                this.right.src = `${URL_PREFIX}/img/blocks/${upgrade.namespace}/all.jpg`;
+                this.setFavicon(`${URL_PREFIX}/img/blocks/${upgrade.namespace}/all.jpg`);
                 break;
 
             case "bottomtop":
-                this.left.src = `/img/blocks/${upgrade.namespace}/bottom.jpg`;
-                this.top.src = `/img/blocks/${upgrade.namespace}/top.jpg`;
-                this.right.src = `/img/blocks/${upgrade.namespace}/bottom.jpg`;
-                this.setFavicon(`/img/blocks/${upgrade.namespace}/bottom.jpg`);
+                this.left.src = `${URL_PREFIX}/img/blocks/${upgrade.namespace}/bottom.jpg`;
+                this.top.src = `${URL_PREFIX}/img/blocks/${upgrade.namespace}/top.jpg`;
+                this.right.src = `${URL_PREFIX}/img/blocks/${upgrade.namespace}/bottom.jpg`;
+                this.setFavicon(`${URL_PREFIX}/img/blocks/${upgrade.namespace}/bottom.jpg`);
                 break;
             
             case "sided":
-                this.left.src = `/img/blocks/${upgrade.namespace}/left.jpg`;
-                this.top.src = `/img/blocks/${upgrade.namespace}/top.jpg`;
-                this.right.src = `/img/blocks/${upgrade.namespace}/right.jpg`;
-                this.setFavicon(`/img/blocks/${upgrade.namespace}/left.jpg`)
+                this.left.src = `${URL_PREFIX}/img/blocks/${upgrade.namespace}/left.jpg`;
+                this.top.src = `${URL_PREFIX}/img/blocks/${upgrade.namespace}/top.jpg`;
+                this.right.src = `${URL_PREFIX}/img/blocks/${upgrade.namespace}/right.jpg`;
+                this.setFavicon(`${URL_PREFIX}/img/blocks/${upgrade.namespace}/left.jpg`)
                 break; 
         }
 

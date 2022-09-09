@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<!-- <link rel="icon" href="/block-clicker/favicon.png" /> -->
+		<meta name="viewport" content="width=device-width" />
+		<meta http-equiv="content-security-policy" content="">
+	<link rel="modulepreload" href="/block-clicker/_app/immutable/start-5f5ba7be.js">
+	<link rel="modulepreload" href="/block-clicker/_app/immutable/chunks/index-c6334806.js">
+	<link rel="modulepreload" href="/block-clicker/_app/immutable/chunks/singletons-98e6674a.js">
+	<link rel="modulepreload" href="/block-clicker/_app/immutable/chunks/index-72e8b35b.js">
+	</head>
+	<body>
+		<div>
+		<script type="module" data-sveltekit-hydrate="45h">
+		import { set_public_env, start } from "/block-clicker/_app/immutable/start-5f5ba7be.js";
+
+		set_public_env({});
+
+		start({
+			target: document.querySelector('[data-sveltekit-hydrate="45h"]').parentNode,
+			paths: {"base":"/block-clicker","assets":"/block-clicker"},
+			route: true,
+			spa: true,
+			trailing_slash: "never",
+			hydrate: null
+		});
+	</script></div>
+	</body>
+</html>
