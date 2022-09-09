@@ -1,0 +1,72 @@
+/* I'm bad at naming things
+
+cube classes meaning:
+    left -> left (its left)
+    right -> front
+    backright -> back
+    backleft -> right
+
+*/
+
+@mixin cube($transform, $cube-size, $clickable: false) {
+    position: relative;
+    transform: $transform;
+    transform-style: preserve-3d;
+    transition: transform 0.3s;
+
+    @if $clickable {
+        &:hover:not(:active) {
+            transform: $transform scale3d(1.3, 1.3, 1.3);
+        }
+        &:hover:active {
+            transform: $transform scale3d(0.9, 0.9, 0.9);
+        }
+    }
+    
+
+    .left, .top, .right, .backleft, .backright {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: $cube-size;
+        height: $cube-size;
+        //background-color: red;
+        // border: 2px solid black;
+        img {
+            width: 100%;
+            height: 100%;
+            user-select: none;
+        }
+    }
+
+    .right, .backright {
+        filter: brightness(0.7);
+    }
+
+    .backleft {
+        transform: rotateY(180deg) translateZ($cube-size);
+    }
+
+    .left {
+        transform: rotateY(270deg) translateX(-100px);
+        transform-origin: center left;
+    }
+
+    .backright {
+        transform: rotateY(-270deg) translateZ(100px);
+        transform-origin: center left;
+    }
+
+    .top {
+        transform: rotateX(-270deg) translateY(-100px) scale(1.004) translateX(-0.39px);
+        filter: brightness(1.45);
+        transform-origin: top center;
+    }
+}
+
+@mixin glow($blur, $border, $color) {
+    text-shadow: 0px 0px $blur $color;
+    -webkit-text-stroke: $color $border;
+}

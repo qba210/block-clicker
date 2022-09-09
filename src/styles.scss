@@ -1,0 +1,27 @@
+@use "./sass/mixins.scss";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+
+    &[noselect] {
+        user-select: none;
+    }
+}
+
+.blocks-header {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    text-align: center;
+}
+
+#block {
+    position: absolute !important;
+    left: 50%;
+    top: 50%;
+    cursor: pointer;
+
+    @include mixins.cube(translate(-50%, -50%) rotateX(325deg) rotateY(45deg), 100px, true)
+}
