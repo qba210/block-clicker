@@ -73,6 +73,6 @@ export const blockUpgrades: BlockUpgrade[] = [
             bps: 0,
             multiplier: 0
         },
-        isDisabled: false
+        isDisabled: true
     }
 ]

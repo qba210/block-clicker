@@ -46,7 +46,7 @@
         display: flex;
         flex-direction: row;
         gap: 10px;
-        min-width: 25vw;
+        min-width: 370px;
         border: 3px solid black;
         border-radius: 10px;
         padding: 5px;

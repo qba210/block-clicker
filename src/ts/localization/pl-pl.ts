@@ -18,6 +18,14 @@ export default {
         "log": {
             title: "Kłoda",
             description: ""
+        },
+        "stone": {
+            title: "Kamień",
+            description: ""
+        },
+        "cobblestone": {
+            title: "Bruk",
+            description: ""
         }
     },
     splashes: [

@@ -3,6 +3,8 @@ import type ArbitiaryUpgrade from "../upgrades/arbitiaryUpgrade";
 import * as Localization from "../localization"
 import IllegalStateError from "../errors/IllegalStateError";
 import { URL_PREFIX } from "../config";
+import { blockUpgradeIndex } from "./gameManager";
+import { get } from "svelte/store";
 
 export interface BlockGetters {
     getBlocks: () => number;
@@ -24,7 +26,7 @@ export class UpgradeManager {
     getters: BlockGetters;
     setters: BlockSetters;
 
-    blockUpgradeIndex: number = 0;
+    
     
     constructor(leftSide: HTMLImageElement, topSide: HTMLImageElement, rightSide: HTMLImageElement, getters: BlockGetters, setters: BlockSetters) {
         this.left = leftSide;
@@ -32,6 +34,8 @@ export class UpgradeManager {
         this.right = rightSide;
         this.getters = getters;
         this.setters = setters;
+
+        this.ForceApplyBlockUpgrade(blockUpgrades[get(blockUpgradeIndex)], true)
     }
 
     static toArbitiaryBlock(upgrade: BlockUpgrade): ArbitiaryUpgrade {
@@ -65,7 +69,7 @@ export class UpgradeManager {
     }
 
     GetBlockUpgradeIndex() {
-        return this.blockUpgradeIndex;
+        return get(blockUpgradeIndex);
     }
 
     GetBlockUpgrade() {
@@ -88,11 +92,13 @@ export class UpgradeManager {
         return false;
     }
 
-    ForceApplyBlockUpgrade(upgrade: BlockUpgrade) {
+    ForceApplyBlockUpgrade(upgrade: BlockUpgrade, skipValues: boolean = false) {
         
-        this.setters.setBlocks(this.getters.getBlocks() - upgrade.price);
-        this.setters.setBps(this.getters.getBps() + upgrade.upgradeValues.bps);
-        this.setters.setMultiplier(this.getters.getMultiplier() + upgrade.upgradeValues.multiplier);
+        if (!skipValues) {
+            this.setters.setBlocks(this.getters.getBlocks() - upgrade.price);
+            this.setters.setBps(this.getters.getBps() + upgrade.upgradeValues.bps);
+            this.setters.setMultiplier(this.getters.getMultiplier() + upgrade.upgradeValues.multiplier);
+        }
 
         
 
@@ -123,7 +129,7 @@ export class UpgradeManager {
             throw new IllegalStateError(`Upgrade with namespace "${upgrade.namespace} is not registered`)
         }
 
-        this.blockUpgradeIndex = blockUpgrades.findIndex((upgr) => upgr.namespace === upgrade.namespace);
+        blockUpgradeIndex.set(blockUpgrades.findIndex((upgr) => upgr.namespace === upgrade.namespace));
     }
 
     setFavicon(url:string) {

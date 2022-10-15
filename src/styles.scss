@@ -17,6 +17,23 @@ body {
     text-align: center;
 }
 
+@media screen and (max-width: 1000px) {
+    body {
+        overflow: auto;
+        overflow-x: hidden;
+    }
+    .upgrades {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translate(-50%, -100%);
+    }
+}
+
+.upgrades {
+    float: right;
+}
+
 #block {
     position: absolute !important;
     left: 50%;

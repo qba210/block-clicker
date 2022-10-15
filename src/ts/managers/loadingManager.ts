@@ -1,3 +1,5 @@
+import { loadGame, prepareAutosave } from "./gameManager";
+
 export default class LoadingManager {
     additionalTasks: (() => Promise<void>)[];
     onFinishLoading: () => void
@@ -41,6 +43,9 @@ export default class LoadingManager {
                 }
             }, 5)
         })
+
+        loadGame();
+        prepareAutosave();
 
         await this.sleep(2000);
 

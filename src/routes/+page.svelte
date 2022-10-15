@@ -5,14 +5,14 @@
     <DebugMenu on:dimissed={() => debugMenuOpen = false} />
 {/if}
 <div class="blocks-header">
-    <h1>{Math.trunc(blocks)} blocks</h1>
-    <h3>x{multiplier}</h3>
-    <h3>{bps} bps</h3>
+    <h1>{Math.trunc(localBlocks)} blocks</h1>
+    <h3>x{localMultiplier}</h3>
+    <h3>{localBps} bps</h3>
     {#if allowDebug}
         <sub>DEBUG ENABLED</sub>
     {/if}
 </div>
-<div on:click={() => blocks += multiplier} id="block">
+<div on:click={() => blocks.update(val => val + get(multiplier))} id="block">
     <div class="right">
         <img alt="" draggable="false" bind:this={blockRight} />
     </div>
@@ -35,15 +35,12 @@
     import { onMount } from "svelte";
     import Upgrade from "../components/upgrade.svelte";
     import LoadingManager from "../ts/managers/loadingManager";
-    import { writable } from "svelte/store";
+    import { get, writable } from "svelte/store";
     import Loading from "../components/loading.svelte";
     import DebugMenu from "../components/DebugMenu.svelte"
     import type ArbitiaryUpgrade from "../ts/upgrades/arbitiaryUpgrade";
     import hotkeys from 'hotkeys-js';
-
-    let blocks: number = 0;
-    let multiplier: number = 1;
-    let bps: number = 0;
+    import { bps, blocks, multiplier } from "../ts/managers/gameManager";
 
     let blockLeft: HTMLImageElement;
     let blockRight: HTMLImageElement;
@@ -61,9 +58,17 @@
     let allowDebug = false;
     let debugMenuOpen = false;
 
+    let localBlocks = get(blocks);
+    let localMultiplier = get(multiplier);
+    let localBps = get(bps);
+
+    blocks.subscribe(val => localBlocks = val)
+    multiplier.subscribe(val => localMultiplier = val)
+    bps.subscribe(val => localBps = val)
+
     let bpsWorker = setInterval(() => {
-        let bpms = bps * 0.001;
-        blocks += bpms;
+        let bpms = get(bps) * 0.01;
+        blocks.update((val) => val + bpms);
     }, 1);
     
     $: nextBlockUpgrade, console.log("Next block up", nextBlockUpgrade);
@@ -71,29 +76,29 @@
     finishedLoadingStore.subscribe(val => finishedLoading = val);
     loadingManager.startLoading();
 
-    $: blocks, (() => {try {
-        document.title = `${blocks} blocks - Block Clicker`
+    blocks.subscribe((value) => {
+        try {
+            document.title = `${Math.trunc(localBlocks)} blocks - Block Clicker`
 
-        if (nextBlockUpgrade) {
-            blockUpgradeExpensive = (nextBlockUpgrade.price > blocks) || nextBlockUpgrade.namespace === "_null";
+            if (nextBlockUpgrade) {
+                blockUpgradeExpensive = (nextBlockUpgrade.price > value) || nextBlockUpgrade.namespace === "_null";
+            }
+
+        } catch(err) {
+            console.error(err);
         }
-
-    } catch(err) {
-        console.error(err);
-    }
-
-    })()
+    })
 
 
     const getters: BlockGetters = {
-        getBlocks: () => blocks,
-        getMultiplier: () => multiplier,
-        getBps: () => bps,
+        getBlocks: () => get(blocks),
+        getMultiplier: () => get(multiplier),
+        getBps: () => get(bps),
     }
     const setters: BlockSetters = {
-        setBlocks: (val) => blocks = val,
-        setMultiplier: (val) => multiplier = val,
-        setBps: (val) => bps = val,
+        setBlocks: (val) => blocks.set(val),
+        setMultiplier: (val) => multiplier.set(val),
+        setBps: (val) => bps.set(val),
     }
 
     function onBlockUpgraded(arbUpgrade: ArbitiaryUpgrade) {
@@ -134,25 +139,10 @@
         window.addEventListener("beforeunload", (event) => {
             finishedLoadingStore.set(false);
         })
-
-        window.addEventListener("keyup", (event) => {
-            
-            console.log("event", event);
-            if (event.keyCode === 79 && event.ctrlKey && event.shiftKey) {
-                let newval =  parseFloat(prompt("set value") ?? "");
-                if (!isNaN(newval)) {
-                    blocks = newval;
-                }
-            }
-        })
     }
 
 </script>
 
 <style lang="scss" global>
     @import "../styles.scss";
-
-    .upgrades {
-        float: right;
-    }
 </style>
