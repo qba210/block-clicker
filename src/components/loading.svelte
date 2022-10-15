@@ -41,7 +41,7 @@
     let blockBackLeft: string;
     let blockTop: string;
 
-    let targetBlockUpgrade = blockUpgrades.filter((upgrade) => upgrade.textureMode !== "sided").pick();
+    let targetBlockUpgrade = blockUpgrades.filter((upgrade) => (upgrade.textureMode !== "sided" && !upgrade.isDisabled)).pick();
 
     function getBackgroundUrl() {
         if (targetBlockUpgrade.textureMode === "all") {

@@ -25,3 +25,8 @@ body {
 
     @include mixins.cube(translate(-50%, -50%) rotateX(325deg) rotateY(45deg), 100px, true)
 }
+
+
+.block-render {
+    @include mixins.cube(rotateX(325deg) rotateY(45deg), 100px)
+}

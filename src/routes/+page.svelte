@@ -1,10 +1,16 @@
 {#if !finishedLoading}
     <Loading/>
 {/if}
+{#if allowDebug && debugMenuOpen}
+    <DebugMenu on:dimissed={() => debugMenuOpen = false} />
+{/if}
 <div class="blocks-header">
     <h1>{Math.trunc(blocks)} blocks</h1>
     <h3>x{multiplier}</h3>
-    <h3>{bps} bps</h3>    
+    <h3>{bps} bps</h3>
+    {#if allowDebug}
+        <sub>DEBUG ENABLED</sub>
+    {/if}
 </div>
 <div on:click={() => blocks += multiplier} id="block">
     <div class="right">
@@ -31,7 +37,9 @@
     import LoadingManager from "../ts/managers/loadingManager";
     import { writable } from "svelte/store";
     import Loading from "../components/loading.svelte";
-    import type ArbitiaryUpgrade from "src/ts/upgrades/arbitiaryUpgrade";
+    import DebugMenu from "../components/DebugMenu.svelte"
+    import type ArbitiaryUpgrade from "../ts/upgrades/arbitiaryUpgrade";
+    import hotkeys from 'hotkeys-js';
 
     let blocks: number = 0;
     let multiplier: number = 1;
@@ -50,6 +58,9 @@
     let nextBlockUpgrade: ArbitiaryUpgrade | undefined;
     let blockUpgradeExpensive: boolean = true;
 
+    let allowDebug = false;
+    let debugMenuOpen = false;
+
     let bpsWorker = setInterval(() => {
         let bpms = bps * 0.001;
         blocks += bpms;
@@ -64,7 +75,7 @@
         document.title = `${blocks} blocks - Block Clicker`
 
         if (nextBlockUpgrade) {
-            blockUpgradeExpensive = nextBlockUpgrade.price > blocks;
+            blockUpgradeExpensive = (nextBlockUpgrade.price > blocks) || nextBlockUpgrade.namespace === "_null";
         }
 
     } catch(err) {
@@ -95,6 +106,22 @@
 
     async function onFinishedLoading() {
         finishedLoadingStore.set(true);
+
+        allowDebug = location.hash === "#enable-debug"
+
+        window.addEventListener("hashchange", (e) => {
+            if (location.hash === "#enable-debug") {
+                allowDebug = confirm("Enable debug mode?")
+            } else {
+                allowDebug = false;
+            }
+        })
+
+        hotkeys("ctrl+shift+f1", function(event, handler) {
+            event.preventDefault();
+
+            debugMenuOpen = !debugMenuOpen;
+        })
 
         upgradeManager = new UpgradeManager(blockLeft, blockTop, blockRight, getters, setters);
         upgradeManager.ForceApplyBlockUpgrade(blockUpgrades[0])

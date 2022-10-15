@@ -36,12 +36,25 @@ export class UpgradeManager {
 
     static toArbitiaryBlock(upgrade: BlockUpgrade): ArbitiaryUpgrade {
         let localized = Localization.getLocalizedUpgrade(upgrade.namespace) ?? {title: undefined, description: undefined};
+        let icon = `${URL_PREFIX}/img/placeholder.png`;
+        switch (upgrade.textureMode) {
+            case "all": 
+                icon = `${URL_PREFIX}/img/blocks/${upgrade.namespace}/all.${upgrade.imageExtension}`;
+                break;
+            case "bottomtop": 
+                icon = `${URL_PREFIX}/img/blocks/${upgrade.namespace}/bottom.${upgrade.imageExtension}`;
+                break;
+            case "sided": 
+                icon = `${URL_PREFIX}/img/blocks/${upgrade.namespace}/left.${upgrade.imageExtension}`;
+                break;
+        }
+        
 
         return {
             description: localized.description,
             title: localized.title,
             namespace: upgrade.namespace,
-            icon: "/img/placeholder.png",
+            icon,
             price: upgrade.price,
             upgradeValues: upgrade.upgradeValues
         }
@@ -68,7 +81,7 @@ export class UpgradeManager {
     }
 
     ApplyBlockUpgrade(upgrade: BlockUpgrade) {
-        if (upgrade && this.getters.getBlocks() >= upgrade.price) {
+        if (upgrade && this.getters.getBlocks() >= upgrade.price && !upgrade.isDisabled) {
             this.ForceApplyBlockUpgrade(upgrade);
             return true;
         }

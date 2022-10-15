@@ -1,29 +1,42 @@
 <div class="upgrade" bind:this={root} on:click={() => upgrade ? onUpgrade(upgrade) : null}>
     <div class="left-side">
-        <img alt="upgrade icon" />
+        {#if upgrade}
+            <!-- <img class="upgrade-img" src={(upgrade ?? {icon: `${URL_PREFIX}/img/placeholder.png`}).icon} alt="upgrade icon" /> -->
+            <RenderBlock style="position: relative; transform: scale(.7) translate(30%, -100%); top: 35%" bind:namespace={namespace} />
+        {/if}
     </div>
     <div class="right-side">
         {#if upgrade}
-        <h1>{title}</h1>
-        <div>Upgrade to {upgrade.title}</div>
-        {:else}
-        <h1>{title}</h1>
-        <div>You have reached max level.</div>
+            {#if upgrade.namespace !== "_null"}
+                <h1>{title}</h1>
+                <div>Upgrade to {upgrade.title}</div>
+            {:else}
+                <h1>{title}</h1>
+                <div>You have reached max level.</div>
+            {/if}
         {/if}
+    </div>
+    <div class="bottom-right">
+        {upgrade?.price} blocks
     </div>
 </div>
 
 <script lang="ts">
-    import type ArbitiaryUpgrade from "src/ts/upgrades/arbitiaryUpgrade";
+    import { URL_PREFIX } from "../ts/config";
+    import type ArbitiaryUpgrade from "../ts/upgrades/arbitiaryUpgrade";
+    import type { BlockUpgrade } from "src/ts/upgrades";
+    import RenderBlock from "./RenderBlock.svelte";
 
     export let upgrade: ArbitiaryUpgrade | undefined;
     export let onUpgrade: (upgrade: ArbitiaryUpgrade) => void;
     export let title: string = upgrade ? upgrade.title : "";
     export let isExpesnive = false;
+    let namespace = "";
 
     let root: HTMLDivElement;
 
     $: isExpesnive, root ? ( isExpesnive || !upgrade ? root.setAttribute("expensive", "") : root.removeAttribute("expensive") ) : null
+    $: upgrade, upgrade ? namespace = upgrade.namespace : null
 </script>
 
 <!-- svelte-ignore css-unused-selector -->
@@ -40,10 +53,16 @@
         cursor: pointer;
         transition: background-color 0.5s;
         background-color: white;
+        position: relative;
 
         &:global([expensive]) {
             cursor: not-allowed !important;
             background-color: rgb(192, 192, 192);
+        }
+
+        .upgrade-img {
+            width: 100%;
+            height: 100%;
         }
 
         & h1 {
@@ -53,6 +72,13 @@
         .left-side {
             width: 110px;
             height: 110px;
+        }
+
+        .bottom-right {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            text-align: right;
         }
     }
 </style>

@@ -6,6 +6,7 @@ export interface BlockUpgrade {
     imageExtension: "jpg" | "png";
     price: number;
     upgradeValues: UpgradeValues;
+    isDisabled?: boolean;
 }
 
 export function findBlockUpgradeByNamespace(namespace: string) {
@@ -62,5 +63,16 @@ export const blockUpgrades: BlockUpgrade[] = [
             bps: 2.4,
             multiplier: 1
         }
+    },
+    {
+        namespace: "_null",
+        textureMode: "all",
+        imageExtension: "jpg",
+        price: -1,
+        upgradeValues: {
+            bps: 0,
+            multiplier: 0
+        },
+        isDisabled: false
     }
 ]
