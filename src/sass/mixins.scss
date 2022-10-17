@@ -8,6 +8,22 @@ cube classes meaning:
 
 */
 
+$zero: 0;
+
+@mixin outline($thicc, $color, $other-filter: sepia(0)) {
+    filter: 
+        $other-filter
+        drop-shadow($thicc 0 0 $color) // right
+        drop-shadow(-$thicc 0 0 $color) // left
+        drop-shadow(0 $thicc 0 $color) // top
+        drop-shadow(0 (-$thicc) 0 $color) // bottom
+        drop-shadow(-$thicc $thicc 0 $color) // top left
+        drop-shadow($thicc $thicc 0 $color) // top right
+        drop-shadow(-$thicc (-$thicc) 0 $color) // bottom left
+        drop-shadow($thicc (-$thicc) 0 $color) // bottom right
+        ;
+}
+
 @mixin cube($transform, $cube-size, $clickable: false) {
     position: relative;
     transform: $transform;

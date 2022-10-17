@@ -1,11 +1,17 @@
 <div id="debug-menu" on:click={function(e) {parentClicked.bind(this)(e)}}>
     <div class="inner-parent">
         <h1 style="text-align: center;">Block Clicker debugmenu</h1>
+        <div>
+            <DebugButton on:click={clearSave}>Clear save</DebugButton>
+            <DebugButton on:click={() => blocks.update((blck) => blck + 100)}>Add 100 blocks</DebugButton>
+        </div>
     </div>
 </div>
 
 <script lang="ts">
+    import { blocks, clearSave } from '../../ts/managers/gameManager';
     import { createEventDispatcher } from 'svelte';
+    import DebugButton from './DebugButton.svelte';
 
     const dispatch = createEventDispatcher();
 

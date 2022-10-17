@@ -1,8 +1,11 @@
 {#if !finishedLoading}
     <Loading/>
 {/if}
-{#if allowDebug && debugMenuOpen}
-    <DebugMenu on:dimissed={() => debugMenuOpen = false} />
+{#if allowDebug}
+    {#if debugMenuOpen}
+        <DebugMenu on:dimissed={() => debugMenuOpen = false} />
+    {/if}
+    <DebugConsole visible={consoleOpen} on:dimissed={() => consoleOpen = false} />
 {/if}
 <div class="blocks-header">
     <h1>{Math.trunc(localBlocks)} blocks</h1>
@@ -12,6 +15,7 @@
         <sub>DEBUG ENABLED</sub>
     {/if}
 </div>
+<div class="block-over">
 <div on:click={() => blocks.update(val => val + get(multiplier))} id="block">
     <div class="right">
         <img alt="" draggable="false" bind:this={blockRight} />
@@ -22,6 +26,7 @@
     <div class="top">
         <img alt="" draggable="false" bind:this={blockTop} />
     </div>
+</div>
 </div>
 {#if upgradeManager}
 <div class="upgrades">
@@ -37,10 +42,11 @@
     import LoadingManager from "../ts/managers/loadingManager";
     import { get, writable } from "svelte/store";
     import Loading from "../components/loading.svelte";
-    import DebugMenu from "../components/DebugMenu.svelte"
+    import DebugMenu from "../components/debug/DebugMenu.svelte"
     import type ArbitiaryUpgrade from "../ts/upgrades/arbitiaryUpgrade";
     import hotkeys from 'hotkeys-js';
     import { bps, blocks, multiplier } from "../ts/managers/gameManager";
+    import DebugConsole from "../components/debug/DebugConsole.svelte";
 
     let blockLeft: HTMLImageElement;
     let blockRight: HTMLImageElement;
@@ -57,6 +63,7 @@
 
     let allowDebug = false;
     let debugMenuOpen = false;
+    let consoleOpen = false;
 
     let localBlocks = get(blocks);
     let localMultiplier = get(multiplier);
@@ -67,7 +74,7 @@
     bps.subscribe(val => localBps = val)
 
     let bpsWorker = setInterval(() => {
-        let bpms = get(bps) * 0.01;
+        let bpms = get(bps) * 0.005;
         blocks.update((val) => val + bpms);
     }, 1);
     
@@ -122,14 +129,23 @@
             }
         })
 
-        hotkeys("ctrl+shift+f1", function(event, handler) {
+        hotkeys("ctrl+alt+f1, ctrl+alt+f2", function(event, handler) {
             event.preventDefault();
+            console.log(handler.key)
+            switch (handler.key) {
+                case "ctrl+alt+f1":
+                    debugMenuOpen = !debugMenuOpen;
+                    break;
 
-            debugMenuOpen = !debugMenuOpen;
+                case "ctrl+alt+f2":
+                    consoleOpen = !consoleOpen;
+                    break;
+            }
+            
         })
 
         upgradeManager = new UpgradeManager(blockLeft, blockTop, blockRight, getters, setters);
-        upgradeManager.ForceApplyBlockUpgrade(blockUpgrades[0])
+        //upgradeManager.ForceApplyBlockUpgrade(blockUpgrades[0])
 
         nextBlockUpgrade = UpgradeManager.toArbitiaryBlock(upgradeManager.GetNextBlockUpgradeSure());
 

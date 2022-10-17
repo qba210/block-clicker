@@ -1,4 +1,4 @@
-<div {style}>
+<div class="block-render-wrap" {style}>
 <div class="block-render" style="width: 100%; height: 100%;" >
     <div class="right">
         <img alt="" draggable="false" src={right} />
@@ -43,5 +43,10 @@
 </script>
 
 <style lang="scss">
+    @use "../sass/mixins.scss";
     @import "../styles.scss";
+
+    // .block-render-wrap {
+    //     @include mixins.outline(1px, white);
+    // }
 </style>

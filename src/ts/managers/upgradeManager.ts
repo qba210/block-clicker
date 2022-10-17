@@ -18,6 +18,8 @@ export interface BlockSetters {
     setBps: (bps: number) => void;
 }
 
+let baseBlockUpgradeIndex = 0;
+
 export class UpgradeManager {
     left: HTMLImageElement;
     top: HTMLImageElement;
@@ -35,7 +37,13 @@ export class UpgradeManager {
         this.getters = getters;
         this.setters = setters;
 
-        this.ForceApplyBlockUpgrade(blockUpgrades[get(blockUpgradeIndex)], true)
+        blockUpgradeIndex.set(baseBlockUpgradeIndex);
+        this.ForceApplyBlockUpgrade(blockUpgrades[baseBlockUpgradeIndex], true)
+    }
+
+    static setBaseBlockUpgradeIndex(index: number) {
+        console.log(index);
+        baseBlockUpgradeIndex = index;
     }
 
     static toArbitiaryBlock(upgrade: BlockUpgrade): ArbitiaryUpgrade {
@@ -100,7 +108,7 @@ export class UpgradeManager {
             this.setters.setMultiplier(this.getters.getMultiplier() + upgrade.upgradeValues.multiplier);
         }
 
-        
+        console.log(upgrade)
 
         switch (upgrade.textureMode) {
             case "all":

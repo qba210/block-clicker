@@ -80,6 +80,7 @@
         left: calc(50% - 50px);
         top: calc(50% - 50px);
         transform: translate(-50%, -50%);
+        @include mixins.outline(1px, white);
     }
 
     .header {
@@ -127,6 +128,7 @@
         z-index: 5;
         background-repeat: no-repeat;
         background-size: cover;
+        color: black;
     }
     .bg-img {
         background-color: white;

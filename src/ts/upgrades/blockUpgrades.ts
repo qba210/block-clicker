@@ -65,6 +65,16 @@ export const blockUpgrades: BlockUpgrade[] = [
         }
     },
     {
+        namespace: "furnace",
+        textureMode: "sided",
+        imageExtension: "jpg",
+        price: 1000,
+        upgradeValues: {
+            bps: 2.5,
+            multiplier: 1.5
+        }
+    },
+    {
         namespace: "_null",
         textureMode: "all",
         imageExtension: "jpg",

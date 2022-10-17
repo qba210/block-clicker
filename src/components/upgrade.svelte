@@ -17,7 +17,11 @@
         {/if}
     </div>
     <div class="bottom-right">
-        {upgrade?.price} blocks
+        {#if upgrade}
+            {#if upgrade.namespace !== "_null"}
+                {upgrade?.price} blocks
+            {/if}
+        {/if}
     </div>
 </div>
 
@@ -47,17 +51,19 @@
         flex-direction: row;
         gap: 10px;
         min-width: 370px;
-        border: 3px solid black;
+        border: 3px solid white;
         border-radius: 10px;
         padding: 5px;
         cursor: pointer;
-        transition: background-color 0.5s;
+        transition: background-color 0.5s, color 0.5s;
         background-color: white;
+        color: black;
         position: relative;
 
         &:global([expensive]) {
             cursor: not-allowed !important;
-            background-color: rgb(192, 192, 192);
+            color: white;
+            background-color: rgb(93 93 93);
         }
 
         .upgrade-img {

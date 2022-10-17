@@ -1,3 +1,4 @@
+import { ConsoleManager } from "./consoleManager";
 import { loadGame, prepareAutosave } from "./gameManager";
 
 export default class LoadingManager {
@@ -43,6 +44,8 @@ export default class LoadingManager {
                 }
             }, 5)
         })
+
+        ConsoleManager.startLogging();
 
         loadGame();
         prepareAutosave();
