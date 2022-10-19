@@ -6,5 +6,6 @@ export default interface ArbitiaryUpgrade {
     namespace: string;
     icon: string,
     price: number,
-    upgradeValues: UpgradeValues
+    upgradeValues: UpgradeValues,
+    isBlockUpgrade: boolean
 }

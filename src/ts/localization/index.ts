@@ -6,7 +6,8 @@ export interface Locale {
     key: string;
     language: string;
     strings: {[key: string]: string};
-    upgrades: {[namespace: string]: UpgradeLocaleEntry};
+    blockUpgrades: {[namespace: string]: UpgradeLocaleEntry};
+    otherUpgrades: {[namespace: string]: UpgradeLocaleEntry};
     splashes: string[];
 }
 
@@ -23,10 +24,18 @@ export const AVALIBLE_LOCALES: Locale[] = [
     locale_en_us,
 ]
 
-export function getLocalizedUpgrade(namespace: string): UpgradeLocaleEntry {
-    let localized = getCurrentLocale().upgrades[namespace];
+export function getLocalizedBlockUpgrade(namespace: string): UpgradeLocaleEntry {
+    let localized = getCurrentLocale().blockUpgrades[namespace];
     if (!localized) {
-        localized = getDefaultLocale().upgrades[namespace];
+        localized = getDefaultLocale().blockUpgrades[namespace];
+    }
+    return localized;
+}
+
+export function getLocalizedOtherUpgrade(namespace: string): UpgradeLocaleEntry {
+    let localized = getCurrentLocale().otherUpgrades[namespace];
+    if (!localized) {
+        localized = getDefaultLocale().otherUpgrades[namespace];
     }
     return localized;
 }

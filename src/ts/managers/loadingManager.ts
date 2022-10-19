@@ -1,5 +1,8 @@
-import { ConsoleManager } from "./consoleManager";
+import { patchWindowExtensions } from "../extensions/WindowExtension";
+import { initializeVersionInfo } from "../util/versionInfo";
+import { ConsoleManager } from "../debug/consoleManager";
 import { loadGame, prepareAutosave } from "./gameManager";
+import { Flags } from "../debug/flags";
 
 export default class LoadingManager {
     additionalTasks: (() => Promise<void>)[];
@@ -29,6 +32,8 @@ export default class LoadingManager {
             }, 5)
         })
 
+        patchWindowExtensions();
+
         await new Promise((res) => {
             var work = setInterval(() => {
                 try {
@@ -47,6 +52,8 @@ export default class LoadingManager {
 
         ConsoleManager.startLogging();
 
+        Flags.loadFlags();
+        initializeVersionInfo();
         loadGame();
         prepareAutosave();
 

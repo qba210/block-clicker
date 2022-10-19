@@ -88,7 +88,7 @@
         left: 50%;
         top: 15%;
         transform: translate(-50%, -50%);
-        z-index: 7;
+        z-index: 9999999999935;
         font-size: 80px;
         @include mixins.glow(8px, 0.4px, #fff);
     }
@@ -129,6 +129,7 @@
         background-repeat: no-repeat;
         background-size: cover;
         color: black;
+        z-index: 9999999999934;
     }
     .bg-img {
         background-color: white;

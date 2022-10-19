@@ -1,37 +1,55 @@
 {#if visible}
-    <div id="debug-console" on:mousedown={function(e) {parentClicked.bind(this)(e)}}>
-        <div class="inner-parent">
-            <div class="console-output">
-                {#each localEntries as entry}
-                    <div class={`log-entry log-entry-${entry.type}`}>
-                        <span class="time">[{msToTimeFormatted(entry.time)}]</span>
-                        <span class="time">[{entry.type}]</span>
-                        <span>{entry.messages}</span>
-                    </div>
-                {/each}
-            </div>
-            <textarea spellcheck="false" class="command-input" bind:this={input} on:keydown={inputCharTyped} ></textarea>
+    <PopupWrapper zIndex={999999995} id="debug-console" on:dimissed={function(e) {dispatch("dimissed")}}>
+        <div class="options">
+            <Checkbox bind:checked={rowCulling} id="row-culling-check" label="Row Culling" />
         </div>
-    </div>
+        <div bind:this={output} class="console-output">
+            {#each localEntries as entry}
+                <div class={`log-entry log-entry-${entry.type}`}>
+                    <span class="time">[{msToTimeFormatted(entry.time)}]</span>
+                    <span class="time">[{entry.type}]</span>
+                    <span>{@html entry.messages}</span>
+                </div>
+            {/each}
+        </div>
+        <textarea spellcheck="false" class="command-input" bind:this={input} on:keydown={inputCharTyped} ></textarea>
+    </PopupWrapper>
 {/if}
 
 <script lang="ts">
     import { blocks, clearSave } from '../../ts/managers/gameManager';
     import { createEventDispatcher, onMount } from 'svelte';
     import DebugButton from './DebugButton.svelte';
-    import { ConsoleManager } from '../../ts/managers/consoleManager';
+    import { ConsoleManager } from '../../ts/debug/consoleManager';
+    import PopupWrapper from "../PopupWrapper.svelte";
+    import Checkbox from "../Checkbox.svelte";
 
     let input: HTMLTextAreaElement;
+    let output: HTMLDivElement;
     export let visible = false;
 
     const dispatch = createEventDispatcher();
 
     let localEntries: ConsoleManager.LogEntry[] = [];
     let commandHistory: string[] = [];
+    let mounted = false;
+
+    let rowCulling = true;
+
+    $: visible, scrollToBottom();
+
+    $: rowCulling, output ? (rowCulling ? output.setAttribute("row-culling", "") : output.removeAttribute("row-culling")) : null
 
     onMount(() => {
         ConsoleManager.addListener(onLogged);
-    })
+        mounted = true;
+    });
+
+    function scrollToBottom() {
+        if (mounted && visible && output) {
+            output.scroll({behavior: 'smooth', top: output.scrollHeight})
+        }
+    }
 
     function onLogged() {
         localEntries = ConsoleManager.logEntries;
@@ -40,13 +58,14 @@
 
     function inputCharTyped(event: KeyboardEvent) {
         let cursorPos = input.selectionStart;
-        console.log(cursorPos);
+        // console.log(cursorPos);
 
         if (event.key === "Enter" && !event.ctrlKey) {
             event.preventDefault();
-            ConsoleManager.executeCommand(input.value)
-            commandHistory.push(input.value);
+            let val = input.value;
+            commandHistory.push(val);
             input.value = "";
+            ConsoleManager.executeCommand(val)
         }
         if (event.code === "Enter" && event.ctrlKey) {
             event.preventDefault();
@@ -76,27 +95,11 @@
 </script>
 
 <style lang="scss">
-    #debug-console {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.4);
-        color: white;
-        backdrop-filter: blur(10px);
-        z-index: 734573458749;
+    :global(#debug-console) {
 
-        .inner-parent {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-
+        :global(.inner-parent) {
             width: 70%;
-            height: 50%;
-            background-color: black;
-            border: 3px solid white;
+            height: 60%;
         }
 
         .console-output {
@@ -104,8 +107,21 @@
             background-color: black;
             display: flex;
             overflow-y: auto;
-            height: 80%;
+            height: 77%;
             flex-direction: column;
+            margin-left: 5px;
+
+            &:not([row-culling]) {
+                word-wrap: none;
+                word-break: keep-all;   
+                overflow-x: auto;
+
+                & > div {
+                    max-width: 10000px;
+                    width: max-content;
+                    margin-right: 10px;
+                }
+            }
         }
 
         .command-input {
@@ -116,6 +132,11 @@
             height: 15%;
             font-size: 20px;
             resize: none;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: row;
         }
 
         .log-entry-warn {
@@ -129,5 +150,6 @@
         .log-entry-debug {
             color: rgb(181, 181, 181);
         }
+        
     }
 </style>

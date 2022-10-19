@@ -1,8 +1,11 @@
-<div class="upgrade" bind:this={root} on:click={() => upgrade ? onUpgrade(upgrade) : null}>
+<div class="upgrade" bind:this={root} on:click={() => (upgrade && !isExpesnive) ? onUpgrade(upgrade) : null}>
     <div class="left-side">
         {#if upgrade}
-            <!-- <img class="upgrade-img" src={(upgrade ?? {icon: `${URL_PREFIX}/img/placeholder.png`}).icon} alt="upgrade icon" /> -->
-            <RenderBlock style="position: relative; transform: scale(.7) translate(30%, -100%); top: 35%" bind:namespace={namespace} />
+            {#if upgrade.isBlockUpgrade}
+                <RenderBlock style="position: relative; transform: scale(.7) translate(30%, -100%); top: 35%" bind:namespace={namespace} />
+            {:else}
+                <img class="upgrade-img" src={(upgrade ?? {icon: `${URL_PREFIX}/img/placeholder.png`}).icon} alt="upgrade icon" />
+            {/if}
         {/if}
     </div>
     <div class="right-side">
@@ -14,6 +17,9 @@
                 <h1>{title}</h1>
                 <div>You have reached max level.</div>
             {/if}
+        {:else}
+            <h1>{title}</h1>
+            <div>You have reached max level.</div>
         {/if}
     </div>
     <div class="bottom-right">
@@ -39,7 +45,7 @@
 
     let root: HTMLDivElement;
 
-    $: isExpesnive, root ? ( isExpesnive || !upgrade ? root.setAttribute("expensive", "") : root.removeAttribute("expensive") ) : null
+    $: isExpesnive, root ? ( (isExpesnive || !upgrade) ? root.setAttribute("expensive", "") : root.removeAttribute("expensive") ) : null
     $: upgrade, upgrade ? namespace = upgrade.namespace : null
 </script>
 

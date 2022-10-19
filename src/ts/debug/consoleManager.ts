@@ -1,4 +1,5 @@
-import { blocks } from "./gameManager";
+import { blocks } from "../managers/gameManager";
+import { Flags } from "./flags";
 
 let ogConsole = {
     log: console.log,
@@ -85,6 +86,31 @@ export namespace ConsoleManager {
                 blocks.set(amount)
                 log(`Setted ${amount} blocks`);
                 break;
+            
+            case "logging":
+                if (parsed.length < 2) {
+                    log("Logging is " + (loggingStarted ? "enabled" : "disabled"))
+                }
+                switch (parsed[1]) {
+                    case "disable":
+                        stopLogging();
+                        log("Disabled logging");
+                        break;
+                    
+                    case "enable":
+                        startLogging();
+                        log("Enabled logging");
+                        break;
+                }
+                break;
+
+            case "flag":
+                Flags.Command.execute(parsed);
+                break;
+            
+            case "reload":
+                location.reload();
+                break;
 
             default:
                 warn("Command not found")
@@ -92,7 +118,7 @@ export namespace ConsoleManager {
         }
     }
 
-    function log(...data: any[]) {
+    export function log(...data: any[]) {
         ogConsole.log(...data)
         logEntries.push({
             type: "log",
@@ -102,7 +128,7 @@ export namespace ConsoleManager {
         callListeners();
     }
 
-    function warn(...data: any[]) {
+    export function warn(...data: any[]) {
         ogConsole.log(...data)
         logEntries.push({
             type: "warn",
@@ -112,7 +138,7 @@ export namespace ConsoleManager {
         callListeners();
     }
 
-    function debug(...data: any[]) {
+    export function debug(...data: any[]) {
         ogConsole.log(...data)
         logEntries.push({
             type: "debug",
@@ -122,7 +148,7 @@ export namespace ConsoleManager {
         callListeners();
     }
 
-    function consoleError(...data: any[]) {
+    export function consoleError(...data: any[]) {
         ogConsole.log(...data)
         logEntries.push({
             type: "consoleerror",

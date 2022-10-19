@@ -6,7 +6,7 @@ export default {
     strings: {
         "splash-header": "Did you know?"
     },
-    upgrades: {
+    blockUpgrades: {
         "dirt": {
             title: "Dirt",
             description: ""
@@ -25,6 +25,12 @@ export default {
         },
         "cobblestone": {
             title: "Cobblestone",
+            description: ""
+        }
+    },
+    otherUpgrades: {
+        "pickaxe-wood": {
+            title: "Wooden Pickaxe",
             description: ""
         }
     },

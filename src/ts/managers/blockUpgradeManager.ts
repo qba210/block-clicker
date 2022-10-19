@@ -20,7 +20,7 @@ export interface BlockSetters {
 
 let baseBlockUpgradeIndex = 0;
 
-export class UpgradeManager {
+export class BlockUpgradeManager {
     left: HTMLImageElement;
     top: HTMLImageElement;
     right: HTMLImageElement;
@@ -47,7 +47,7 @@ export class UpgradeManager {
     }
 
     static toArbitiaryBlock(upgrade: BlockUpgrade): ArbitiaryUpgrade {
-        let localized = Localization.getLocalizedUpgrade(upgrade.namespace) ?? {title: undefined, description: undefined};
+        let localized = Localization.getLocalizedBlockUpgrade(upgrade.namespace) ?? {title: undefined, description: undefined};
         let icon = `${URL_PREFIX}/img/placeholder.png`;
         switch (upgrade.textureMode) {
             case "all": 
@@ -68,7 +68,8 @@ export class UpgradeManager {
             namespace: upgrade.namespace,
             icon,
             price: upgrade.price,
-            upgradeValues: upgrade.upgradeValues
+            upgradeValues: upgrade.upgradeValues,
+            isBlockUpgrade: true
         }
     }
 

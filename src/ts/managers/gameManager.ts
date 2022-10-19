@@ -1,12 +1,13 @@
 import { get, writable } from "svelte/store";
-import { UpgradeManager } from "./upgradeManager";
+import { BlockUpgradeManager } from "./blockUpgradeManager";
 
 export let blocks = writable(0);
 export let multiplier = writable(1);
 export let bps = writable(0);
 export let blockUpgradeIndex = writable(0);
+export let pickUpgradeIndex = writable(-1);
 
-const saveEntries = [blocks, multiplier, bps, blockUpgradeIndex]
+const saveEntries = [blocks, multiplier, bps, blockUpgradeIndex, pickUpgradeIndex]
 const SAVE_SLOT = "save";
 
 export interface GameSave {
@@ -14,6 +15,7 @@ export interface GameSave {
     multiplier: number;
     bps: number;
     blockUpgradeIndex: number;
+    pickUpgradeIndex: number;
 }
 
 let hasLoadedGame = false;
@@ -35,7 +37,8 @@ export function saveGame() {
         blocks: get(blocks),   
         multiplier: get(multiplier),
         bps: get(bps),   
-        blockUpgradeIndex: get(blockUpgradeIndex),   
+        blockUpgradeIndex: get(blockUpgradeIndex),
+        pickUpgradeIndex: get(pickUpgradeIndex),
     }))
 }
 
@@ -47,7 +50,10 @@ export function loadGame() {
         multiplier.set(save.multiplier ?? 1);
         bps.set(save.bps ?? 0);
         blockUpgradeIndex.set(save.blockUpgradeIndex ?? 0);
-        UpgradeManager.setBaseBlockUpgradeIndex(save.blockUpgradeIndex ?? 0);
+        pickUpgradeIndex.set(save.pickUpgradeIndex ?? -1);
+
+
+        BlockUpgradeManager.setBaseBlockUpgradeIndex(save.blockUpgradeIndex ?? 0);
         hasLoadedGame = true;
     }
 }
